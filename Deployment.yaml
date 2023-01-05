@@ -1,77 +1,37 @@
 ---
-apiVersion: v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: javawebapp
- name: javawebapp 
 spec:
-  replicas: 1
+  replicas: 2
+  selector:
+    matchLabels:
+      app: javawebapplication
   template:
     metadata:
       labels:
-        app: javawebapp
+        app: javawebapplication
     spec:
       containers:
       - name: aksconnectiondemo
         image: aksconnectiondemo.azurecr.io/javasampleapp:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 8080
----
-apiVersion: v1
-kind: ReplicationController
-metadata:
-  labels:
-    name: javawebapp
-  name: java-controller
-spec:
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        name: javawebapp
-    spec:
-      containers:
-      - image: aksconnectiondemo.azurecr.io/javasampleapp:latest
-        name: aksconnectiondemo
-        ports:
-        - name: javawebapp
-          containerPort: 8080  
----
-# Node Port Service
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    name: javawebapp
-  name: javawebapp
-spec:
-  type: NodePort
-  ports:
-    - port: 8080
-      targetPort: 8080
-  selector:
-    name: javawebapp
- 
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: javawebapp-svc
-  namespace: default
-spec:
-  type: LoadBalancer
-  ports:
-    - port: 80
-      targetPort: 8080
-      name: http
-    - name: "https"
-      port: 443
-      targetPort: 8080
-      protocol: "TCP"
-  selector:
-    app: javawebapp
-    
+# service type loadbalancer
 
- 
-    
-    
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: java-app-svc
+spec:
+  selector:
+    app: javawebapplication
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: LoadBalancer
+
