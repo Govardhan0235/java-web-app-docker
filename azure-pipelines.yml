@@ -40,3 +40,40 @@ stages:
         tags: |
           $(tag)
           latest
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: '$(Pipeline.Workspace)/s/Deployment.yaml'
+        artifact: 'manifest'
+        publishLocation: 'pipeline'
+
+
+- stage: Deploy
+  displayName: Deploy to DEV
+  dependsOn: Build
+  variables:
+    acrsecrect: k8sexampleacrauth
+  jobs:
+  - job: AKS
+    displayName: Deploy to AKS
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - task: DownloadPipelineArtifact@2
+      inputs:
+        buildType: 'current'
+        artifactName: 'manifests'
+        targetPath: '$(Pipeline.Workspace)/manifests'
+    - task: KubernetesManifest@0
+      inputs:
+          action: 'createSecret'
+          kubernetesServiceConnection: 'kubernetes_Connections'
+          namespace: 'default'
+          secretType: 'dockerRegistry'
+          secretName: '$(acrsecrect)'
+          dockerRegistryEndpoint: 'ACRConnection'
+    - task: KubernetesManifest@0
+      inputs:
+        action: 'deploy'
+        kubernetesServiceConnection: 'kubernetes_Connections'
+        namespace: 'default'
+        manifests: '$(Pipeline.Workspace)/manifests/Deployment.yaml'
