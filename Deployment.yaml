@@ -2,7 +2,7 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: javawebapp-ENVIRONMENT-$(tag)
+  name: javawebapp
 spec:
   replicas: 1
   template:
@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: aksconnectiondemo
-        image: aksconnectiondemo.azurecr.io/sampleapp:latest
+        image: aksconnectiondemo.azurecr.io/javasampleapp:latest
         ports:
         - containerPort: 8080
 ---
@@ -31,7 +31,7 @@ spec:
         name: javawebapp
     spec:
       containers:
-      - image: aksconnectiondemo.azurecr.io/sampleapp:latest
+      - image: aksconnectiondemo.azurecr.io/javasampleapp:latest
         name: aksconnectiondemo
         ports:
         - name: javawebapp
@@ -56,7 +56,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: javawebapp-svc-
+  name: javawebapp-svc
   namespace: default
 spec:
   type: LoadBalancer
