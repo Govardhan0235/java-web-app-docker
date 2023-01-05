@@ -9,7 +9,7 @@ resources:
 - repo: self
 
 variables:
-  imageRepo: sampleapp
+  imageRepo: javasampleapp
   tag: '$(Build.BuildId)'
 
 stages:
@@ -35,7 +35,7 @@ stages:
       inputs:
         containerRegistry: 'ACRConnection'
         repository: '$(imageRepo)'
-        command: 'build'
+        command: 'buildAndPush'
         Dockerfile: '**/Dockerfile'
         tags: |
           $(tag)
