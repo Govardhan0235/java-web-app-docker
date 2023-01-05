@@ -68,7 +68,7 @@ spec:
       protocol: "TCP"
   selector:
     app: javawebapp
-    version: "$(tag)"
+    
 
  
     
