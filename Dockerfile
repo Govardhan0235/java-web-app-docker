@@ -4,6 +4,6 @@
 
 FROM openjdk:11
 ARG JAR_FILE=target/java-web-app*.war
-COPY ${JAR_FILE} book-service.jar
-ENTRYPOINT ["java","-jar","/book-service.jar"]
+COPY ${JAR_FILE} book-service.war
+ENTRYPOINT ["java","-jar","/book-service.war"]
 EXPOSE 8080
