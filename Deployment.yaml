@@ -12,7 +12,7 @@ spec:
         version: "$(tag)"
     spec:
       containers:
-      - name: javawebapp-ENVIRONMENT-$(tag)
+      - name: aksconnectiondemo
         image: aksconnectiondemo.azurecr.io/sampleapp:latest
         ports:
         - containerPort: 8080
@@ -32,7 +32,7 @@ spec:
     spec:
       containers:
       - image: aksconnectiondemo.azurecr.io/sampleapp:latest
-        name: javawebapp
+        name: aksconnectiondemo
         ports:
         - name: javawebapp
           containerPort: 8080  
