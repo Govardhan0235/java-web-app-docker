@@ -1,4 +1,22 @@
 ---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: javawebapp-ENVIRONMENT-$(tag)
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: javawebapp
+        version: "$(tag)"
+    spec:
+      containers:
+      - name: javawebapp-ENVIRONMENT-$(tag)
+        image: aksconnectiondemo.azurecr.io/sampleapp:latest
+        ports:
+        - containerPort: 8080
+---
 apiVersion: v1
 kind: ReplicationController
 metadata:
@@ -33,3 +51,27 @@ spec:
       targetPort: 8080
   selector:
     name: javawebapp
+ 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: javawebapp-svc-
+  namespace: default
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 8080
+      name: http
+    - name: "https"
+      port: 443
+      targetPort: 8080
+      protocol: "TCP"
+  selector:
+    app: javawebapp
+    version: "$(tag)"
+
+ 
+    
+    
